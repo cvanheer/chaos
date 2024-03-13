@@ -1,0 +1,10 @@
+Package: chaos
+Type: Package
+Title: Package that has useful helper functions for my PhD
+Version: 0.1.0
+Author: Christina Van Heer
+Maintainer: <christinavanheer@gmail.com>
+Description: A series of functions that are helpful for my PhD.
+License: CCL
+Encoding: UTF-8
+LazyData: true
