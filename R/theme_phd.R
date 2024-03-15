@@ -4,7 +4,7 @@
 #' This code was originally written by Indra Parta for the mae team https://github.com/indraparta/maecharts
 #' @keywords theme_mae
 #'
-#' @import ggplot
+#' @import ggplot element_text element_blank theme element_line
 #' @importFrom chaos chaos_palette
 #' @export
 #'

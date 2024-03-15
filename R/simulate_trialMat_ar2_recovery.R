@@ -60,7 +60,7 @@ simulate_trialMat_ar2_recovery <- function(n.subject, n.types, n.trials, a1, a2,
     dplyr::mutate(
       # Calculate what the innovation sd needs to be in order to have a standard deviation
       # of 15 for the generative process - controlled by gen_sd parameter
-      sigma_innov = calc.ts.innov(a1, a2, sigma_ar2)) |>
+      sigma_innov = chaos::calc.ts.innov(a1, a2, sigma_ar2)) |>
     dplyr::select(subject, n_trials, ar2_type, a1, a2, gen_mean, sigma_ar2, sigma_ar2_bound, sigma_innov, tidyselect::everything())
 
  # Simulate AR2 process using each row as input parameters
