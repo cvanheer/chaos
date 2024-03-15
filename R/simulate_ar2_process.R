@@ -13,6 +13,7 @@
 #' @importFrom dplyr between
 #' @importFrom tibble tibble
 #' @importFrom stats rnorm
+#' @importFrom chaos chaos_palette
 #' @examples simulate_ar2_process(n.trials = 280, a1 = 0.5, a2 = 0.3, gen.mean= 0, sigma.ar2 = 15, sigma.ar2.bound = 0.01, sigma.innov = 10, n.burnin = 1000)
 simulate_ar2_process <- function(n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar2.bound, sigma.innov, n.burnin){
   ## Description: this function simulates auto correlated data with a lag of 2,

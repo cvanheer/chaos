@@ -4,13 +4,13 @@
 #' This code was originally written by Indra Parta for the mae team https://github.com/indraparta/maecharts
 #' @keywords theme_mae
 #'
-#' @import magrittr
-#'
+#' @import ggplot
+#' @importFrom chaos chaos_palette
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#'iris %>%
+#'iris |>
 #'  ggplot() +
 #'  geom_point(aes(x = Sepal.Length, y = Sepal.Width, colour = Species)) +
 #'  theme_mae()
@@ -18,7 +18,7 @@
 #' MAE theme elements can be overwritten by adding additional
 #' theme arguments after theme_mae() call
 #'
-#'iris %>%
+#'iris |>
 #'  ggplot() +
 #'  geom_point(aes(x = Sepal.Length, y = Sepal.Width, colour = Species)) +
 #'  theme_mae() +
@@ -87,25 +87,3 @@ theme_phd <- function() {
 
   )
 }
-
-# -------------------------------------------------------------
-# COLOURS FOR PLOTS
-# -------------------------------------------------------------
-cvh_palette <- list(
-  bright_orange = "#FFAC1C",
-  teracotta = "#E3735E",
-  coral_pink = "#F88379",
-  vermillion = "#E34234",
-  cadmium_red = "#D22B2B",
-  muted_red = "#CA3433",
-  magenta = "#ff00d5",
-  dark_teal = "#006666",
-  light_teal = "#b2d8d8",
-  jade_green = "#00A36C",
-  seafoam_green = "#9FE2BF",
-  cornflour_blue = "#6495ED",
-  periwinkle = "#9A95E2",
-  blue_grey = "#7393B3",
-  pewter_grey = "#899499",
-  smoke_grey = "#848884"
-)

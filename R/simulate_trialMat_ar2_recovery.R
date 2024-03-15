@@ -10,10 +10,13 @@
 #' @param n.burnin numerical the number of samples you want to throw out before sampling the AR2 process
 #' @return trialMat = trialMatrix of simulated experiment data as nested datasets
 #' @export
+#' @importFrom tidyselect everything
 #' @importFrom tibble tibble
 #' @importFrom tidyr expand_grid
 #' @importFrom dplyr select mutate arrange
 #' @importFrom purrr pmap
+#' @importFrom chaos simulate_ar2_process
+#' @importFrom chaos chaos_palette
 #' @examples simulate_trialMat_ar2_recovery(n.subject = 1, n.types = 4, n.trials = 280, a1 = 0.6, a2 = -0.4, gen.mean = 0, sigma.ar2 = 15, sigma.ar2.bound = 0.001, n.burnin = 1000)
 simulate_trialMat_ar2_recovery <- function(n.subject, n.types, n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar2.bound, n.burnin){
   # ---------------------------------------------
@@ -58,7 +61,7 @@ simulate_trialMat_ar2_recovery <- function(n.subject, n.types, n.trials, a1, a2,
       # Calculate what the innovation sd needs to be in order to have a standard deviation
       # of 15 for the generative process - controlled by gen_sd parameter
       sigma_innov = calc.ts.innov(a1, a2, sigma_ar2)) |>
-    dplyr::select(subject, n_trials, ar2_type, a1, a2, gen_mean, sigma_ar2, sigma_ar2_bound, sigma_innov, everything())
+    dplyr::select(subject, n_trials, ar2_type, a1, a2, gen_mean, sigma_ar2, sigma_ar2_bound, sigma_innov, tidyselect::everything())
 
  # Simulate AR2 process using each row as input parameters
   trialMat <- trialMat |>

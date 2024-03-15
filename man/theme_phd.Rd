@@ -12,7 +12,7 @@ This code was originally written by Indra Parta for the mae team https://github.
 }
 \examples{
 \dontrun{
-iris \%>\%
+iris |>
  ggplot() +
  geom_point(aes(x = Sepal.Length, y = Sepal.Width, colour = Species)) +
  theme_mae()
@@ -20,7 +20,7 @@ iris \%>\%
 MAE theme elements can be overwritten by adding additional
 theme arguments after theme_mae() call
 
-iris \%>\%
+iris |>
  ggplot() +
  geom_point(aes(x = Sepal.Length, y = Sepal.Width, colour = Species)) +
  theme_mae() +
