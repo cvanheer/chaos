@@ -1,73 +1,60 @@
-# # --- * --- * --- * --- * --- * --- * --- * --- * --- *
-# Simulate AR2 process
-# --- * --- * --- * --- * --- * --- * --- * --- * --- *
-# This is a function that generates AR2 processes in R for my PhD
-# where I want to add a generative process to.
-#
-# You can learn more about package authoring with RStudio at:
-#
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
-#
-#   Install Package:           'Cmd + Shift + B'
-#   Check Package:             'Cmd + Shift + E'
-#   Test Package:              'Cmd + Shift + T'
-
-#' simulate_ar2_process
-#'
-#' @param n.trials an integar number of trials you want in total in your AR2 process
-#' @param std.dev the standard deviation of the innovations in the process (errors)
-#' @param a1 Yule walker parameter alpha1 - how much you weight the previous lag1 data point
-#' @param a2 Yule walker parameter alpha2 - how much you weight the lag2 data point
-#' @param gen.mean Generative mean of the underlying process which is added to the AR2 series. You can use 0 if you do
+#' simulate_ar2_process.R
+#' @param n.trials numerical integer number of trials you want in total in your AR2 process
+#' @param a1 numerical Yule walker parameter alpha1 - how much you weight the previous lag1 data point
+#' @param a2 numerical Yule walker parameter alpha2 - how much you weight the lag2 data point
+#' @param gen.mean numerical integer Generative mean of the underlying process which is added to the AR2 series. You can use 0 if you do
 #' not want anything added, but otherwise it is a time series as long as n.trials
-#' @param burnin the number of samples you want to exclude before the process stabilises
-#' @import tibble
-#' @return dataset - a tibble with the AR2 series
+#' @param sigma.ar2 underlying standard deviation of the AR2 process
+#' @param sigma.ar2.bound numerical acceptable tolerance for SD generated e.g within 0.01 plus or minus of gen_sd
+#' @param sigma.innov innovation/error standard deviation in the AR2 process
+#' @param n.burnin numerical the number of samples you want to throw out before sampling the AR2 process
+#' @return dataset - tibble with all trial info in it
 #' @export
-#'
-#' @examples
-simulate_ar2_process <- function(n.trials, std.dev, a1, a2, gen.mean, n.burnin){
-  ## -------------------------------------------------------------------
-  ## Description: This function generates a second order process given
-  ## n.trials = number of samples (min 4)
-  ## std.dev = standard deviation
-  ## a1 parameter (Yule Walker)
-  ## a2 parameter (Yule Walker)
-  ## The a1 and a2 parameters tell us how much to weight previous samples
-  ## -------------------------------------------------------------------
-
-  ## Generate random noise (add 2 points because starting point)
-  ## The standard deviation of this process is close to the sd
-  ## of the distribution that was put in. We want to be
-  ## able to control the SD of the parent distribution though
+#' @importFrom dplyr between
+#' @importFrom tibble tibble
+#' @importFrom stats rnorm
+#' @examples simulate_ar2_process(n.trials = 280, a1 = 0.5, a2 = 0.3, gen.mean= 0, sigma.ar2 = 15, sigma.ar2.bound = 0.01, sigma.innov = 10, n.burnin = 1000)
+simulate_ar2_process <- function(n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar2.bound, sigma.innov, n.burnin){
+  ## Description: this function simulates auto correlated data with a lag of 2,
+  ## given a set of Yule Walker coefficients (a1, a2) and a specific SD value
+  ## input. In order to get a time series with a specific standard deviation you need to know
+  ## what the standard deviation of the white noise parameter is which you can then use to
+  ## solve an analytic solution for the standard deviation of the actual time series
+  ## Note: we use rounding to calculate the sd so the "accept.sd.value" will not be exact
+  # -------------------------------
 
   n.samples <- n.trials + n.burnin
 
-  # Get white noise which is Gaussian - this is called the
-  # "innovations" of the AR2 process - this term is typically used in
-  # forecasting to describe the fact that information in an AR2 series
-  # is predictable to within an innovation/error term. Because the errors
-  # are derived from a Gaussian process independently on each trial, this is
-  # the "unpredictable" part of the sequence.
-  E <- rnorm(n = n.samples + 2, mean = 0, sd = std.dev)
+  ## Ideally we want a point that is between the lower and upper bound
+  ## First create something that is outside the bound so we can get the while loop going
+  ## so we have an initial value
+  sd.timeseries <- sigma.ar2 * 2 # add more than acceptable bound
 
-  ## Create Y values which are zeros for now
-  Y <- matrix(0, n.samples)
+  # While the sd.value is between
+  while (!dplyr::between(sd.timeseries, sigma.ar2 - sigma.ar2.bound, sigma.ar2 + sigma.ar2.bound)){
+    ## Get white noise
+    E <- stats::rnorm(n = n.samples + 2, mean = 0, sd = sigma.innov)
 
-  ## Update rule according to Yule Walker Equations
-  for (i in 3:n.samples){
+    ## Zeros for now
+    Y <- matrix(0, n.samples)
 
-    ## Current sample = white noise + lag1 + lag2
-    Y[i] <- E[i+2] + a1*Y[i-1] + a2*Y[i-2]
+    ## Update rule according to Yule Walker Equations
+    for (i in 3:n.samples){
 
+      ## Current sample = white noise + lag1 + lag2
+      Y[i] <- E[i+2] + a1*Y[i-1] + a2*Y[i-2]
+
+    }
+
+    # Take burn-in of samples so it has time to stablise
+    Y_burnin <- Y[(n.burnin+1):length(Y)]
+    dataset <- tibble::tibble(ar2_samples = Y_burnin + gen.mean)
+    dataset$sd <- sd(dataset$ar2_samples)
+    sd.timeseries <- sd(dataset$ar2_samples)
   }
 
-  ## Take burn.in of samples so that the AR process has time to stablise
-  dataset <- Y[(n.burnin+1):length(Y)]
-  dataset <- tibble(ar2_samples = dataset + gen.mean)
-  dataset$sd <- sd(dataset$ar2_samples)
   return(dataset)
-
 }
+
+
+
