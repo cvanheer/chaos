@@ -50,10 +50,13 @@ simulate_ar2_process <- function(n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar
     # Take burn-in of samples so it has time to stablise
     Y_burnin <- Y[(n.burnin+1):length(Y)]
     dataset <- tibble::tibble(ar2_samples = Y_burnin + gen.mean)
-    dataset$ar2_samples_sigma <- sd(dataset$ar2_samples)
     # Update the sd.timeseries for the while loop
     sd.timeseries <- sd(dataset$ar2_samples)
   }
+
+  # Update before return after while loop
+  dataset$ar2_samples_sigma <- sd(dataset$ar2_samples)
+  dataset$trial_no <- 1:nrow(dataset)
 
   return(dataset)
 }
