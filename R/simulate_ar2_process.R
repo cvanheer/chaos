@@ -56,7 +56,7 @@ simulate_ar2_process <- function(n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar
 
   # Update before return after while loop
   dataset$ar2_samples_sigma <- sd(dataset$ar2_samples)
-  dataset$trial_no <- 1:nrow(dataset)
+  dataset$trial_no <- 1:n.trials
 
   return(dataset)
 }
