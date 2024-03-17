@@ -40,12 +40,11 @@ simulate_trialMat_ar2_recovery <- function(n.subject, n.types, n.trials, a1, a2,
     tibble::tibble(
       a1 = params$a1,
       a2 = params$a2,
-      n_types = params$n_types
+      ar2_type = params$n_types
   ),
   subject = params$n_subject) |>
     dplyr::arrange(subject) |>
     dplyr::mutate(
-      ar2_type = params$n_types,
       gen_mean = params$gen_mean,
       sigma_ar2_bound = params$sigma_ar2_bound,
       n_trials =  params$n_trials,
