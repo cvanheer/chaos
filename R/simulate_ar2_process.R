@@ -8,14 +8,16 @@
 #' @param sigma.ar2.bound numerical acceptable tolerance for SD generated e.g within 0.01 plus or minus of gen_sd
 #' @param sigma.innov innovation/error standard deviation in the AR2 process
 #' @param n.burnin numerical the number of samples you want to throw out before sampling the AR2 process
+#' @param n.iter the maximum number of iterations you want to simulate the AR2 process before it stops - necessary for simulating around weird parameter spaces
 #' @return dataset - tibble with all trial info in it
 #' @export
 #' @importFrom dplyr between
 #' @importFrom tibble tibble
 #' @importFrom stats rnorm
 #' @importFrom chaos chaos_palette
-#' @examples simulate_ar2_process(n.trials = 280, a1 = 0.5, a2 = 0.3, gen.mean= 0, sigma.ar2 = 15, sigma.ar2.bound = 0.01, sigma.innov = 10, n.burnin = 1000)
-simulate_ar2_process <- function(n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar2.bound, sigma.innov, n.burnin){
+#' @importFrom stats sd
+#' @examples simulate_ar2_process(n.iter = 50000, n.trials = 280, a1 = 0.5, a2 = 0.3, gen.mean= 0, sigma.ar2 = 15, sigma.ar2.bound = 0.01, sigma.innov = 10, n.burnin = 1000)
+simulate_ar2_process <- function(n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar2.bound, sigma.innov, n.burnin, n.iter){
   ## Description: this function simulates auto correlated data with a lag of 2,
   ## given a set of Yule Walker coefficients (a1, a2) and a specific SD value
   ## input. In order to get a time series with a specific standard deviation you need to know
@@ -30,9 +32,11 @@ simulate_ar2_process <- function(n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar
   ## First create something that is outside the bound so we can get the while loop going
   ## so we have an initial value
   sd.timeseries <- sigma.ar2 * 2 # add more than acceptable bound
+  while_iter_run <- 0
 
   # While the sd.value is between
   while (!dplyr::between(sd.timeseries, sigma.ar2 - sigma.ar2.bound, sigma.ar2 + sigma.ar2.bound)){
+
     ## Get white noise
     E <- stats::rnorm(n = n.samples + 2, mean = 0, sd = sigma.innov)
 
@@ -51,12 +55,29 @@ simulate_ar2_process <- function(n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar
     Y_burnin <- Y[(n.burnin+1):length(Y)]
     dataset <- tibble::tibble(ar2_samples = Y_burnin + gen.mean)
     # Update the sd.timeseries for the while loop
-    sd.timeseries <- sd(dataset$ar2_samples)
+    sd.timeseries <- stats::sd(dataset$ar2_samples)
+
+    # Update counter
+    while_iter_run <- while_iter_run + 1
+
+    #print(sprintf("While iteration %s", while_iter_run))
+
+    # Get out of the loop if you cant make an AR2 dataset
+    if (while_iter_run >= n.iter){
+      break;
+
+    }
+
   }
 
   # Update before return after while loop
-  dataset$ar2_samples_sigma <- sd(dataset$ar2_samples)
+  dataset$ar2_samples_sigma <- stats::sd(dataset$ar2_samples)
   dataset$trial_no <- 1:n.trials
+
+  # If the loop takes too long to produce an AR2 dataset within the set parameters
+  # this is a sign something is wrong - return rather than going on forever
+  dataset$error <- dplyr::if_else(while_iter_run >= n.iter, TRUE , FALSE)
+  dataset$while_iter_run <- while_iter_run # add the counter run
 
   return(dataset)
 }

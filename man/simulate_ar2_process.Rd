@@ -12,7 +12,8 @@ simulate_ar2_process(
   sigma.ar2,
   sigma.ar2.bound,
   sigma.innov,
-  n.burnin
+  n.burnin,
+  n.iter
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ not want anything added, but otherwise it is a time series as long as n.trials}
 \item{sigma.innov}{innovation/error standard deviation in the AR2 process}
 
 \item{n.burnin}{numerical the number of samples you want to throw out before sampling the AR2 process}
+
+\item{n.iter}{the maximum number of iterations you want to simulate the AR2 process before it stops - necessary for simulating around weird parameter spaces}
 }
 \value{
 dataset - tibble with all trial info in it
@@ -40,5 +43,5 @@ dataset - tibble with all trial info in it
 simulate_ar2_process.R
 }
 \examples{
-simulate_ar2_process(n.trials = 280, a1 = 0.5, a2 = 0.3, gen.mean= 0, sigma.ar2 = 15, sigma.ar2.bound = 0.01, sigma.innov = 10, n.burnin = 1000)
+simulate_ar2_process(n.iter = 50000, n.trials = 280, a1 = 0.5, a2 = 0.3, gen.mean= 0, sigma.ar2 = 15, sigma.ar2.bound = 0.01, sigma.innov = 10, n.burnin = 1000)
 }

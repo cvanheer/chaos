@@ -5,7 +5,6 @@
 \title{simulate_trialMat_ar2_recovery.R}
 \usage{
 simulate_trialMat_ar2_recovery(
-  n.subject,
   n.types,
   n.trials,
   a1,
@@ -13,12 +12,11 @@ simulate_trialMat_ar2_recovery(
   gen.mean,
   sigma.ar2,
   sigma.ar2.bound,
-  n.burnin
+  n.burnin,
+  n.iter
 )
 }
 \arguments{
-\item{n.subject}{numerical subject number / repetition of simulation}
-
 \item{n.types}{numerical integer the number of types of AR2 sequences you will have}
 
 \item{n.trials}{numerical integer number of trials you want in total in your AR2 process}
@@ -34,6 +32,8 @@ simulate_trialMat_ar2_recovery(
 \item{sigma.ar2.bound}{numerical acceptable tolerance for SD generated e.g within 0.01 plus or minus of gen_sd}
 
 \item{n.burnin}{numerical the number of samples you want to throw out before sampling the AR2 process}
+
+\item{n.iter}{numerical, number of times you want to simulate the AR2 process with a particular parameter combo before it gives up}
 }
 \value{
 trialMat = trialMatrix of simulated experiment data as nested datasets
@@ -42,5 +42,5 @@ trialMat = trialMatrix of simulated experiment data as nested datasets
 simulate_trialMat_ar2_recovery.R
 }
 \examples{
-simulate_trialMat_ar2_recovery(n.subject = 1, n.types = 4, n.trials = 280, a1 = 0.6, a2 = -0.4, gen.mean = 0, sigma.ar2 = 15, sigma.ar2.bound = 0.001, n.burnin = 1000)
+simulate_trialMat_ar2_recovery(n.types = 4, n.trials = 280, a1 = 0.6, a2 = -0.4, gen.mean = 0, sigma.ar2 = 15, sigma.ar2.bound = 0.001, n.burnin = 1000, n.iter = 50000)
 }
