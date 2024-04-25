@@ -65,12 +65,11 @@ simulate_ar2_process <- function(n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar
     # Get out of the loop if you cant make an AR2 dataset
     if (while_iter_run >= n.iter){
       break;
-
     }
 
   }
 
-  # Update before return after while loop
+  a# Update before return after while loop
   dataset$ar2_samples_sigma <- stats::sd(dataset$ar2_samples)
   dataset$trial_no <- 1:n.trials
 

@@ -64,11 +64,11 @@ simulate_trialMat_ar2_recovery <- function(n.types, n.trials, a1, a2, gen.mean, 
                   tidyselect::everything())
 
  # Simulate AR2 process using each row as input parameters
-  trialMat <- trialMat|>
-    dplyr:: mutate(
+  trialMat <- trialMat |>
+    dplyr::mutate(
       # Run the function which constrains the sd of the entire resulting time series even more
-      dataset = purrr::pmap(list(n_trials, a1, a2, gen_mean, sigma_ar2, sigma_ar2_bound, sigma_innov, n_burnin, n.iter),
-                  simulate_ar2_process, .progress = TRUE),
+      dataset = purrr::pmap(list(n_trials, a1, a2, gen_mean, sigma_ar2, sigma_ar2_bound, sigma_innov, n_burnin, n_iter),
+                  chaos::simulate_ar2_process)
     )
 
   return(trialMat)
