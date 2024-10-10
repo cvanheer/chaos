@@ -7,7 +7,7 @@
 #' @param max.trials maximum number of trials before a change point occurs
 #' @param exp.rate average number of trials before a change point - controls the hazard function (1/lambda) this exp.rate is the lambda
 #' @importFrom stats rexp
-#' @return change_point_locations the trial number of the change point
+#' @return trial_counter the number of trials before a change point
 #' @export
 #'
 #' @examples  \dontrun{
@@ -52,12 +52,5 @@ get_change_points <- function(n.trials, min.trials, max.trials, exp.rate){
          # Otherwise keep trial_counter as is
          trial_counter <- trial_counter[1:length(trial_counter)])
 
-  # Get trials which are change points
-  change_point_locations <- cumsum(trial_counter)
-  change_point_locations <- change_point_locations[1:length(change_point_locations)-1]
-
-  # The actual location is NEXT trial
-  change_point_locations <- change_point_locations  + 1
-
-  return(change_point_locations)
+  return(trial_counter)
 }

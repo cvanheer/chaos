@@ -6,17 +6,17 @@
 Description: this creates a set of means for each block of trails before a change point.
 The number of means required depends on how long the trial sequences are before a change point}
 \usage{
-rand_means(n_change_points, lower_gen_mean, upper_gen_mean)
+rand_means(change_points, lower_gen_mean, upper_gen_mean)
 }
 \arguments{
-\item{n_change_points}{int - the number of change point events you want in your experiment}
+\item{change_points}{vector int - the number of change points you want of each}
 
 \item{lower_gen_mean}{int - smallest mean that you want the gaussian to be}
 
 \item{upper_gen_mean}{int - largest mean that you want the gaussian to be}
 }
 \value{
-shuffled_means vect - a vector of integars that contain the generative means in your experiment
+gen_means vect int - a vector of generative means the length of the experiment
 }
 \description{
 simulate_random_means.R

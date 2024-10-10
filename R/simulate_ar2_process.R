@@ -2,7 +2,7 @@
 #' @param n.trials numerical integer number of trials you want in total in your AR2 process
 #' @param a1 numerical Yule walker parameter alpha1 - how much you weight the previous lag1 data point
 #' @param a2 numerical Yule walker parameter alpha2 - how much you weight the lag2 data point
-#' @param gen.mean numerical integer Generative mean of the underlying process which is added to the AR2 series. You can use 0 if you do
+#' @param ar2.mean numerical integer Generative mean of the underlying process which is added to the AR2 series. You can use 0 if you do
 #' not want anything added, but otherwise it is a time series as long as n.trials
 #' @param sigma.ar2 underlying standard deviation of the AR2 process
 #' @param sigma.ar2.bound numerical acceptable tolerance for SD generated e.g within 0.01 plus or minus of gen_sd
@@ -16,8 +16,8 @@
 #' @importFrom stats rnorm
 #' @importFrom chaos chaos_palette
 #' @importFrom stats sd
-#' @examples simulate_ar2_process(n.iter = 50000, n.trials = 280, a1 = 0.5, a2 = 0.3, gen.mean= 0, sigma.ar2 = 15, sigma.ar2.bound = 0.01, sigma.innov = 10, n.burnin = 1000)
-simulate_ar2_process <- function(n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar2.bound, sigma.innov, n.burnin, n.iter){
+#' @examples simulate_ar2_process(n.iter = 50000, n.trials = 280, a1 = 0.5, a2 = 0.3, ar2.mean = 0, sigma.ar2 = 15, sigma.ar2.bound = 0.01, sigma.innov = 10, n.burnin = 1000)
+simulate_ar2_process <- function(n.trials, a1, a2, ar2.mean, sigma.ar2, sigma.ar2.bound, sigma.innov, n.burnin, n.iter){
   ## Description: this function simulates auto correlated data with a lag of 2,
   ## given a set of Yule Walker coefficients (a1, a2) and a specific SD value
   ## input. In order to get a time series with a specific standard deviation you need to know
@@ -38,7 +38,7 @@ simulate_ar2_process <- function(n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar
   while (!dplyr::between(sd.timeseries, sigma.ar2 - sigma.ar2.bound, sigma.ar2 + sigma.ar2.bound)){
 
     ## Get white noise
-    E <- stats::rnorm(n = n.samples + 2, mean = 0, sd = sigma.innov)
+    E <- stats::rnorm(n = n.samples + 2, mean = ar2.mean, sd = sigma.innov)
 
     ## Zeros for now
     Y <- matrix(0, n.samples)
@@ -53,7 +53,7 @@ simulate_ar2_process <- function(n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar
 
     # Take burn-in of samples so it has time to stablise
     Y_burnin <- Y[(n.burnin+1):length(Y)]
-    dataset <- tibble::tibble(ar2_samples = Y_burnin + gen.mean)
+    dataset <- tibble::tibble(ar2_samples = Y_burnin + ar2.mean)
     # Update the sd.timeseries for the while loop
     sd.timeseries <- stats::sd(dataset$ar2_samples)
 
@@ -69,7 +69,7 @@ simulate_ar2_process <- function(n.trials, a1, a2, gen.mean, sigma.ar2, sigma.ar
 
   }
 
-  a# Update before return after while loop
+  # Update before return after while loop
   dataset$ar2_samples_sigma <- stats::sd(dataset$ar2_samples)
   dataset$trial_no <- 1:n.trials
 

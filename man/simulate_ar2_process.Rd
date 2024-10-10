@@ -8,7 +8,7 @@ simulate_ar2_process(
   n.trials,
   a1,
   a2,
-  gen.mean,
+  ar2.mean,
   sigma.ar2,
   sigma.ar2.bound,
   sigma.innov,
@@ -23,7 +23,7 @@ simulate_ar2_process(
 
 \item{a2}{numerical Yule walker parameter alpha2 - how much you weight the lag2 data point}
 
-\item{gen.mean}{numerical integer Generative mean of the underlying process which is added to the AR2 series. You can use 0 if you do
+\item{ar2.mean}{numerical integer Generative mean of the underlying process which is added to the AR2 series. You can use 0 if you do
 not want anything added, but otherwise it is a time series as long as n.trials}
 
 \item{sigma.ar2}{underlying standard deviation of the AR2 process}
@@ -43,5 +43,5 @@ dataset - tibble with all trial info in it
 simulate_ar2_process.R
 }
 \examples{
-simulate_ar2_process(n.iter = 50000, n.trials = 280, a1 = 0.5, a2 = 0.3, gen.mean= 0, sigma.ar2 = 15, sigma.ar2.bound = 0.01, sigma.innov = 10, n.burnin = 1000)
+simulate_ar2_process(n.iter = 50000, n.trials = 280, a1 = 0.5, a2 = 0.3, ar2.mean = 0, sigma.ar2 = 15, sigma.ar2.bound = 0.01, sigma.innov = 10, n.burnin = 1000)
 }

@@ -9,7 +9,7 @@ simulate_trialMat_ar2_recovery(
   n.trials,
   a1,
   a2,
-  gen.mean,
+  ar2.mean,
   sigma.ar2,
   sigma.ar2.bound,
   n.burnin,
@@ -25,7 +25,7 @@ simulate_trialMat_ar2_recovery(
 
 \item{a2}{numerical Yule walker parameter alpha2 - how much you weight the lag2 data point}
 
-\item{gen.mean}{numerical integer Generative mean of the underlying process which is added to the AR2 series}
+\item{ar2.mean}{numerical integer mean of the ar2 process}
 
 \item{sigma.ar2}{underlying standard deviation of the generative distribution}
 
@@ -42,5 +42,5 @@ trialMat = trialMatrix of simulated experiment data as nested datasets
 simulate_trialMat_ar2_recovery.R
 }
 \examples{
-simulate_trialMat_ar2_recovery(n.types = 4, n.trials = 280, a1 = 0.6, a2 = -0.4, gen.mean = 0, sigma.ar2 = 15, sigma.ar2.bound = 0.001, n.burnin = 1000, n.iter = 50000)
+simulate_trialMat_ar2_recovery(n.types = 4, n.trials = 280, a1 = 0.6, a2 = -0.4, ar2.mean = 0, sigma.ar2 = 15, sigma.ar2.bound = 0.001, n.burnin = 1000, n.iter = 50000)
 }

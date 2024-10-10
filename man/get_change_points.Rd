@@ -18,7 +18,7 @@ get_change_points(n.trials, min.trials, max.trials, exp.rate)
 \item{exp.rate}{average number of trials before a change point - controls the hazard function (1/lambda) this exp.rate is the lambda}
 }
 \value{
-change_point_locations the trial number of the change point
+trial_counter the number of trials before a change point
 }
 \description{
 simulate_change_points.R
